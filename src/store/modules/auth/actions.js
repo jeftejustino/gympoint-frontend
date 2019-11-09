@@ -5,7 +5,7 @@ export function SignInRequest(email, password) {
   };
 }
 
-export function SignInSuccess(profile) {
+export function SignInSuccess(token, profile) {
   return {
     type: '@auth/SIGN_IN_SUCCESS',
     payload: profile,

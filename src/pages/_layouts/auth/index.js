@@ -1,7 +1,11 @@
 import React from 'react';
 
-import { Container } from './styles';
+import { Wrapper, Container } from './styles';
 
 export default function auth({ children }) {
-  return <Container>{children}</Container>;
+  return (
+    <Wrapper>
+      <Container>{children}</Container>
+    </Wrapper>
+  );
 }
