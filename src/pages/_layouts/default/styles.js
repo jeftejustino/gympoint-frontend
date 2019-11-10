@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  background: #12f;
+  height: 100%;
+  overflow: auto;
 `;

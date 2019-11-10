@@ -8,12 +8,18 @@ export function SignInRequest(email, password) {
 export function SignInSuccess(token, profile) {
   return {
     type: '@auth/SIGN_IN_SUCCESS',
-    payload: profile,
+    payload: { token, profile },
   };
 }
 
-export function SIgnInFailure() {
+export function SignInFailure() {
   return {
     type: '@auth/SIGN_IN_FAILURE',
+  };
+}
+
+export function SingOut() {
+  return {
+    type: '@auth/SIGN_OUT',
   };
 }
