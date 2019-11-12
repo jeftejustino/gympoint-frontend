@@ -19,12 +19,11 @@ export const List = styled.table`
       color: #666;
       padding: 15px 0px;
 
-      a {
+      .edit {
         color: #4d85ee;
         font-size: 15px;
       }
-
-      button {
+      .remove {
         color: #de3b3b;
         font-size: 15px;
       }
