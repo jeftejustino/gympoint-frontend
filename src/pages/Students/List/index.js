@@ -9,15 +9,19 @@ import { Container, LoadingContainer } from './styles';
 
 import Loading from '~/components/Loading';
 
+import ModalConfirm from '~/components/ModalConfirm';
+
 import api from '~/services/api';
 
 import { edit } from '~/store/modules/student/actions';
 
 export default function StudentsList() {
   const [students, setSutents] = useState([]);
-  const [search, setSearch] = useState('a');
+  const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [confirm, setConfirm] = useState(false);
+  const [studentConfirm, setStudentConfirm] = useState({});
 
   useEffect(() => {
     async function getStudents() {
@@ -45,20 +49,42 @@ export default function StudentsList() {
     }
   }, [search, page]);
 
-  async function handleEditar(id) {}
+  async function handleEdit(id) {}
 
-  async function handleApagar(id) {
+  async function handleConfirm(id) {
+    setStudentConfirm(id);
+    setConfirm(true);
+  }
+
+  async function handleCancel() {
+    setStudentConfirm(null);
+    setConfirm(false);
+  }
+
+  async function handleDelete(id) {
     try {
-      // await api.delete(`/students/${id}`);
+      await api.delete(`/students/${id}`);
 
       setPage(0);
+      toast.success('Sucesso ao remover aluno!');
     } catch (error) {
       toast.error('Falhar ao remove aluno!\nTente novamente mais tarde!');
+    } finally {
+      setStudentConfirm(null);
+      setConfirm(false);
     }
   }
 
   return (
     <Container>
+      <ModalConfirm
+        show={confirm}
+        handleCancel={() => handleCancel()}
+        handleConfirm={() => handleDelete(studentConfirm)}
+      >
+        <div>Realmente deseja remover o aluno?</div>
+      </ModalConfirm>
+
       <TitleActions>
         <Title>Gerenciando alunos</Title>
 
@@ -108,7 +134,7 @@ export default function StudentsList() {
                   <button
                     className="edit"
                     type="button"
-                    onClick={() => handleEditar(student.id)}
+                    onClick={() => handleEdit(student.id)}
                   >
                     editar
                   </button>
@@ -117,7 +143,7 @@ export default function StudentsList() {
                   <button
                     className="remove"
                     type="button"
-                    onClick={() => handleApagar(student.id)}
+                    onClick={() => handleConfirm(student.id)}
                   >
                     apagar
                   </button>

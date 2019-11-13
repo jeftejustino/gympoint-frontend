@@ -4,6 +4,7 @@ import { darken } from 'polished';
 export const TitleActions = styled.div`
   display: flex;
   justify-content: space-between;
+  margin-bottom: 40px;
 `;
 
 export const Title = styled.h1`
@@ -15,7 +16,8 @@ export const Title = styled.h1`
 export const Actions = styled.div`
   display: flex;
 
-  > a {
+  > a,
+  button {
     background: #ee4d64;
     color: #fff;
     font-size: 14px;
@@ -33,6 +35,16 @@ export const Actions = styled.div`
 
     svg {
       margin-right: 5px;
+    }
+  }
+
+  .cancel {
+    background: #ccc;
+    color: #fff;
+    margin-right: 15px;
+
+    :hover {
+      background: ${darken(0.03, '#CCC')};
     }
   }
 `;
