@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { MdAdd, MdSearch } from 'react-icons/md';
 import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
 
 import { TitleActions, Title, Actions, Search } from '~/styles/titleActions';
 import { List } from '~/styles/list';
@@ -13,7 +14,7 @@ import ModalConfirm from '~/components/ModalConfirm';
 
 import api from '~/services/api';
 
-import { edit } from '~/store/modules/student/actions';
+import { editStudent } from '~/store/modules/student/actions';
 
 export default function StudentsList() {
   const [students, setSutents] = useState([]);
@@ -22,6 +23,8 @@ export default function StudentsList() {
   const [loading, setLoading] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [studentConfirm, setStudentConfirm] = useState({});
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     async function getStudents() {
@@ -49,7 +52,9 @@ export default function StudentsList() {
     }
   }, [search, page]);
 
-  async function handleEdit(id) {}
+  async function handleEdit(studentData) {
+    dispatch(editStudent(studentData));
+  }
 
   async function handleConfirm(id) {
     setStudentConfirm(id);
@@ -134,7 +139,7 @@ export default function StudentsList() {
                   <button
                     className="edit"
                     type="button"
-                    onClick={() => handleEdit(student.id)}
+                    onClick={() => handleEdit(student)}
                   >
                     editar
                   </button>

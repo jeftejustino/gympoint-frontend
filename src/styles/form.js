@@ -17,6 +17,13 @@ export const FormContainer = styled.div`
       border-radius: 4px;
       padding: 0px 10px;
     }
+
+    input + span {
+      color: #f00;
+      align-self: center;
+      display: block;
+      margin-top: 5px;
+    }
   }
 `;
 
@@ -27,5 +34,6 @@ export const OneLine = styled.div`
   > * {
     padding: 8px;
     flex-grow: 1;
+    flex-basis: 0;
   }
 `;
