@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { MdAdd, MdSearch } from 'react-icons/md';
+import { MdAdd } from 'react-icons/md';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 
-import { TitleActions, Title, Actions, Search } from '~/styles/titleActions';
+import { TitleActions, Title, Actions } from '~/styles/titleActions';
 import { List } from '~/styles/list';
 import { Container, LoadingContainer } from './styles';
 
