@@ -41,4 +41,16 @@ export default createGlobalStyle`
     border: 0;
     background: none;
   }
+
+  .text-center{
+    text-align: center !important;
+  }
+
+  .text-left{
+    text-align: left !important;
+  }
+
+  .text-right{
+    text-align: right !important;
+  }
 `;

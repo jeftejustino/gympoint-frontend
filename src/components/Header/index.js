@@ -19,14 +19,14 @@ export default function Header() {
     <Container>
       <Content>
         <div>
-          <Link to="/dashboard">
+          <Link to="/alunos">
             <Logo>
               <img src={logo} alt="GymPoint" />
             </Logo>
           </Link>
 
           <nav>
-            <NavLink to="/dashboard">ALUNOS</NavLink>
+            <NavLink to="/alunos">ALUNOS</NavLink>
             <NavLink to="/planos">PLANOS</NavLink>
             <NavLink to="/matriculas">MATRÍCULAS</NavLink>
             <NavLink to="/pedidos-de-auxilio">PEDIDOS DE AUXÍLIO</NavLink>

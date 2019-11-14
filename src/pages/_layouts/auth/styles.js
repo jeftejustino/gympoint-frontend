@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { darken } from 'polished';
 
 export const Wrapper = styled.div`
   background: #ee4d64;
@@ -67,6 +68,11 @@ export const Container = styled.div`
       font-size: 16px;
       border-radius: 4px;
       box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+      transition: 0.3s all;
+
+      :hover {
+        background: ${darken(0.03, '#ee4d64')};
+      }
     }
   }
 `;
