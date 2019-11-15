@@ -3,14 +3,14 @@ import { all, takeLatest } from 'redux-saga/effects';
 import history from '~/services/history';
 
 function edit() {
-  history.push('/planos/editar');
+  history.push('/matriculas/editar');
 }
 
 function create() {
-  history.push('/planos/adicionar');
+  history.push('/matriculas/adicionar');
 }
 
 export default all([
-  takeLatest('@plan/EDIT', edit),
-  takeLatest('@plan/CREATE', create),
+  takeLatest('@registration/EDIT', edit),
+  takeLatest('@registration/CREATE', create),
 ]);

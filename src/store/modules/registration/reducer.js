@@ -1,19 +1,19 @@
 import produce from 'immer';
 
 const INITIAL_STATE = {
-  student: null,
+  registration: null,
 };
 
 export default function auth(state = INITIAL_STATE, action) {
   return produce(state, draft => {
     switch (action.type) {
-      case '@student/EDIT': {
-        draft.student = action.payload.student;
+      case '@registration/EDIT': {
+        draft.registration = action.payload.registration;
         break;
       }
 
-      case '@student/CREATE': {
-        draft.student = null;
+      case '@registration/CREATE': {
+        draft.registration = null;
         break;
       }
 

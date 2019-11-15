@@ -6,4 +6,11 @@ function edit() {
   history.push('/alunos/editar');
 }
 
-export default all([takeLatest('@student/EDIT', edit)]);
+function create() {
+  history.push('/alunos/adicionar');
+}
+
+export default all([
+  takeLatest('@student/EDIT', edit),
+  takeLatest('@student/CREATE', create),
+]);

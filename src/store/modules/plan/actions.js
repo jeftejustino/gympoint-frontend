@@ -6,3 +6,9 @@ export function editPlan(plan) {
     },
   };
 }
+
+export function createPlan() {
+  return {
+    type: '@plan/CREATE',
+  };
+}

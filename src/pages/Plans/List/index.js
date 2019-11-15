@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { MdAdd } from 'react-icons/md';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
@@ -15,7 +14,7 @@ import api from '~/services/api';
 
 import { formatPrice } from '~/util/format';
 
-import { editPlan } from '~/store/modules/plan/actions';
+import { editPlan, createPlan } from '~/store/modules/plan/actions';
 
 export default function PlansList() {
   const [plans, setPlans] = useState([]);
@@ -63,6 +62,10 @@ export default function PlansList() {
     dispatch(editPlan(planData));
   }
 
+  async function handleCreate() {
+    dispatch(createPlan());
+  }
+
   async function handleConfirm(id) {
     setPlanConfirm(id);
     setConfirm(true);
@@ -101,10 +104,10 @@ export default function PlansList() {
         <Title>Gerenciando planos</Title>
 
         <Actions>
-          <Link to="/planos/adicionar">
+          <button type="button" onClick={handleCreate}>
             <MdAdd size={20} color="#fff" />
             CADASTRAR
-          </Link>
+          </button>
         </Actions>
       </TitleActions>
       {loading ? (

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { MdAdd, MdSearch } from 'react-icons/md';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
@@ -14,7 +13,7 @@ import ModalConfirm from '~/components/ModalConfirm';
 
 import api from '~/services/api';
 
-import { editStudent } from '~/store/modules/student/actions';
+import { editStudent, createStudent } from '~/store/modules/student/actions';
 
 export default function StudentsList() {
   const [students, setSutents] = useState([]);
@@ -56,6 +55,10 @@ export default function StudentsList() {
     dispatch(editStudent(studentData));
   }
 
+  async function handleCreate() {
+    dispatch(createStudent());
+  }
+
   async function handleConfirm(id) {
     setStudentConfirm(id);
     setConfirm(true);
@@ -94,10 +97,10 @@ export default function StudentsList() {
         <Title>Gerenciando alunos</Title>
 
         <Actions>
-          <Link to="/alunos/adicionar">
+          <button type="button" onClick={handleCreate}>
             <MdAdd size={20} color="#fff" />
             CADASTRAR
-          </Link>
+          </button>
 
           <Search>
             <input

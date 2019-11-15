@@ -12,6 +12,11 @@ export default function auth(state = INITIAL_STATE, action) {
         break;
       }
 
+      case '@plan/CREATE': {
+        draft.plan = null;
+        break;
+      }
+
       default:
     }
   });

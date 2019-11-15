@@ -6,3 +6,9 @@ export function editStudent(student) {
     },
   };
 }
+
+export function createStudent() {
+  return {
+    type: '@student/CREATE',
+  };
+}

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const FormContainer = styled.div`
-  div {
+  > div {
     margin-bottom: 20px;
 
     strong {
@@ -13,16 +13,39 @@ export const FormContainer = styled.div`
     input {
       width: 100%;
       height: 45px;
-      border: 1px solid #dddddd;
+      border: 1px solid #ddd;
       border-radius: 4px;
       padding: 0px 10px;
+
+      :focus {
+        border-color: #ed3f58;
+      }
     }
 
-    input + span {
+    span {
       color: #f00;
       align-self: center;
       display: block;
       margin-top: 5px;
+    }
+
+    .react-select-container {
+      input {
+        height: 31px;
+      }
+
+      .react-select__control {
+        border-color: #ddd;
+      }
+
+      .react-select__control--is-focused {
+        border-color: #ed3f58;
+        box-shadow: none;
+      }
+
+      .react-select__menu {
+        margin-top: 0px;
+      }
     }
   }
 `;
