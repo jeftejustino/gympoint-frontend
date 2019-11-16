@@ -10,6 +10,7 @@ import PlansList from '~/pages/Plans/List';
 import PlansForm from '~/pages/Plans/Form';
 import RegistrationsList from '~/pages/Registrations/List';
 import RegistrationsForm from '~/pages/Registrations/Form';
+import HelpOrders from '~/pages/HelpOrders';
 
 export default function Routes() {
   return (
@@ -35,6 +36,8 @@ export default function Routes() {
         component={RegistrationsForm}
       />
       <Route path="/matriculas" isPrivate component={RegistrationsList} />
+
+      <Route path="/pedidos-de-auxilio" isPrivate component={HelpOrders} />
     </Switch>
   );
 }
