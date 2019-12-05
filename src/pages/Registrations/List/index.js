@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { MdAdd, MdDone } from 'react-icons/md';
 import { toast } from 'react-toastify';
-import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import { format, parseISO } from 'date-fns';
 import pt from 'date-fns/locale/pt-BR';
@@ -14,11 +14,6 @@ import ModalConfirm from '~/components/ModalConfirm';
 
 import api from '~/services/api';
 
-import {
-  editRegistration,
-  createRegistration,
-} from '~/store/modules/registration/actions';
-
 export default function RegistrationsList() {
   const [registrations, setRegistrations] = useState([]);
   const [page, setPage] = useState(1);
@@ -26,60 +21,45 @@ export default function RegistrationsList() {
   const [confirm, setConfirm] = useState(false);
   const [registrationConfirm, setRegistrationConfirm] = useState({});
 
-  const dispatch = useDispatch();
+  const getRegistrations = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await api.get('/registrations', {
+        params: {
+          page,
+        },
+      });
 
-  useEffect(() => {
-    async function getRegistrations() {
-      try {
-        setLoading(true);
-        const response = await api.get('/registrations', {
-          params: {
-            page,
-          },
-        });
+      const data = response.data.map(registration => ({
+        ...registration,
+        start_dateFormatted: format(
+          parseISO(registration.start_date),
+          "dd 'de' MMMM 'de' yyyy ",
+          {
+            locale: pt,
+          }
+        ),
+        end_dateFormatted: format(
+          parseISO(registration.end_date),
+          "dd 'de' MMMM 'de' yyyy ",
+          {
+            locale: pt,
+          }
+        ),
+      }));
 
-        const data = response.data.map(registration => ({
-          ...registration,
-          start_dateFormatted: format(
-            parseISO(registration.start_date),
-            "dd 'de' MMMM 'de' yyyy ",
-            {
-              locale: pt,
-            }
-          ),
-          end_dateLinkFormatted: format(
-            parseISO(registration.end_date),
-            "dd 'de' MMMM 'de' yyyy ",
-            {
-              locale: pt,
-            }
-          ),
-        }));
-
-        setRegistrations(data);
-      } catch (error) {
-        toast.error(
-          'Falhar ao buscar matrículas!\nTente novamente mais tarde!'
-        );
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    if (page === 0) {
-      setPage(1);
-    } else {
-      getRegistrations();
+      console.tron.log(data);
+      setRegistrations(data);
+    } catch (error) {
+      toast.error('Falhar ao buscar matrículas!\nTente novamente mais tarde!');
+    } finally {
+      setLoading(false);
     }
   }, [page]);
 
-  async function handleEdit(registrationData) {
-    dispatch(editRegistration(registrationData));
-  }
-
-  async function handleCreate() {
-    dispatch(createRegistration());
-  }
+  useEffect(() => {
+    getRegistrations();
+  }, [getRegistrations]);
 
   async function handleConfirm(id) {
     setRegistrationConfirm(id);
@@ -95,7 +75,7 @@ export default function RegistrationsList() {
     try {
       await api.delete(`/registrations/${id}`);
 
-      setPage(0);
+      getRegistrations();
       toast.success('Sucesso ao remover matrícula!');
     } catch (error) {
       toast.error('Falhar ao remover matrícula!\nTente novamente mais tarde!');
@@ -119,10 +99,10 @@ export default function RegistrationsList() {
         <Title>Gerenciando matrículas</Title>
 
         <Actions>
-          <button type="button" onClick={handleCreate}>
+          <Link to="matriculas/adicionar">
             <MdAdd size={20} color="#fff" />
             CADASTRAR
-          </button>
+          </Link>
         </Actions>
       </TitleActions>
       {loading ? (
@@ -156,13 +136,12 @@ export default function RegistrationsList() {
                   </CheckCircle>
                 </td>
                 <td>
-                  <button
+                  <Link
+                    to={`matriculas/editar/${registration.id}`}
                     className="edit"
-                    type="button"
-                    onClick={() => handleEdit(registration)}
                   >
                     editar
-                  </button>
+                  </Link>
                 </td>
                 <td>
                   <button

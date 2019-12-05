@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import { MdAdd, MdSearch } from 'react-icons/md';
 import { toast } from 'react-toastify';
-import { useDispatch } from 'react-redux';
 
 import { TitleActions, Title, Actions, Search } from '~/styles/titleActions';
 import { List } from '~/styles/list';
@@ -13,51 +13,35 @@ import ModalConfirm from '~/components/ModalConfirm';
 
 import api from '~/services/api';
 
-import { editStudent, createStudent } from '~/store/modules/student/actions';
-
 export default function StudentsList() {
-  const [students, setSutents] = useState([]);
+  const [students, setStudents] = useState([]);
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [studentConfirm, setStudentConfirm] = useState({});
 
-  const dispatch = useDispatch();
+  const getStudents = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await api.get('/students', {
+        params: {
+          q: search,
+          page,
+        },
+      });
+
+      setStudents(response.data);
+    } catch (error) {
+      toast.error('Falhar ao buscar alunos!\nTente novamente mais tarde!');
+    } finally {
+      setLoading(false);
+    }
+  }, [page, search]);
 
   useEffect(() => {
-    async function getStudents() {
-      try {
-        setLoading(true);
-        const response = await api.get('/students', {
-          params: {
-            q: search,
-            page,
-          },
-        });
-
-        setSutents(response.data);
-      } catch (error) {
-        toast.error('Falhar ao buscar alunos!\nTente novamente mais tarde!');
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    if (page === 0) {
-      setPage(1);
-    } else {
-      getStudents();
-    }
-  }, [search, page]);
-
-  async function handleEdit(studentData) {
-    dispatch(editStudent(studentData));
-  }
-
-  async function handleCreate() {
-    dispatch(createStudent());
-  }
+    getStudents();
+  }, [getStudents]);
 
   async function handleConfirm(id) {
     setStudentConfirm(id);
@@ -73,7 +57,7 @@ export default function StudentsList() {
     try {
       await api.delete(`/students/${id}`);
 
-      setPage(0);
+      getStudents();
       toast.success('Sucesso ao remover aluno!');
     } catch (error) {
       toast.error('Falhar ao remove aluno!\nTente novamente mais tarde!');
@@ -97,10 +81,10 @@ export default function StudentsList() {
         <Title>Gerenciando alunos</Title>
 
         <Actions>
-          <button type="button" onClick={handleCreate}>
+          <Link to="/alunos/adicionar">
             <MdAdd size={20} color="#fff" />
             CADASTRAR
-          </button>
+          </Link>
 
           <Search>
             <input
@@ -139,13 +123,9 @@ export default function StudentsList() {
                 <td>{student.email}</td>
                 <td align="center">{student.age}</td>
                 <td>
-                  <button
-                    className="edit"
-                    type="button"
-                    onClick={() => handleEdit(student)}
-                  >
+                  <Link to={`/alunos/editar/${student.id}`} className="edit">
                     editar
-                  </button>
+                  </Link>
                 </td>
                 <td>
                   <button

@@ -1,20 +1,17 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Input } from '@rocketseat/unform';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { MdDone, MdChevronLeft } from 'react-icons/md';
 import * as Yup from 'yup';
 import { toast } from 'react-toastify';
-import { useDispatch, useSelector } from 'react-redux';
 
-import { Container } from './styles';
+import Loading from '~/components/Loading';
+import { Container, LoadingContainer } from './styles';
 import { FormContainer, OneLine } from '~/styles/form';
 import { TitleActions, Title, Actions } from '~/styles/titleActions';
 import api from '~/services/api';
 
-import { editStudent } from '~/store/modules/student/actions';
-
 export default function ComponentForm() {
-  const dispatch = useDispatch();
   const Schema = Yup.object().shape({
     name: Yup.string()
       .min(3, 'Nome precisa ter pelo menos 3 caracteres')
@@ -40,18 +37,41 @@ export default function ComponentForm() {
       .required('Altura é obrigatória!'),
   });
 
-  const student = useSelector(state => state.student.student);
+  const { student_id } = useParams();
+  const [student, setStudent] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    async function getStudent() {
+      try {
+        setLoading(true);
+        const response = await api.get('/students', {
+          params: {
+            id: student_id,
+          },
+        });
+
+        setStudent(response.data[0]);
+      } catch (error) {
+        toast.error('Falhar ao buscar alunos!\nTente novamente mais tarde!');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (student_id) getStudent();
+  }, [student_id]);
 
   async function handleSubmit(data) {
     try {
       if (student) {
         const response = await api.put(`student/${student.id}`, data);
         toast.success('Estudante atualizado com sucesso!');
-        dispatch(editStudent(response.data));
+        setStudent(response.data);
       } else {
         const response = await api.post('student', data);
         toast.success('Estudante salvo com sucesso!');
-        dispatch(editStudent(response.data));
+        setStudent(response.data);
       }
     } catch (error) {
       toast.error(
@@ -77,32 +97,38 @@ export default function ComponentForm() {
             </button>
           </Actions>
         </TitleActions>
-        <FormContainer>
-          <div>
-            <strong>NOME COMPLETO</strong>
-            <Input name="name" placeholder="John Doe" />
-          </div>
+        {loading ? (
+          <LoadingContainer>
+            <Loading />
+          </LoadingContainer>
+        ) : (
+          <FormContainer>
+            <div>
+              <strong>NOME COMPLETO</strong>
+              <Input name="name" placeholder="John Doe" />
+            </div>
 
-          <div>
-            <strong>ENDEREÇO DE E-MAIL</strong>
-            <Input name="email" placeholder="exemplo@email.com" />
-          </div>
+            <div>
+              <strong>ENDEREÇO DE E-MAIL</strong>
+              <Input name="email" placeholder="exemplo@email.com" />
+            </div>
 
-          <OneLine>
-            <div>
-              <strong>IDADE</strong>
-              <Input name="age" />
-            </div>
-            <div>
-              <strong>PESO (em kg)</strong>
-              <Input name="weight" />
-            </div>
-            <div>
-              <strong>ALTURA</strong>
-              <Input name="height" />
-            </div>
-          </OneLine>
-        </FormContainer>
+            <OneLine>
+              <div>
+                <strong>IDADE</strong>
+                <Input name="age" />
+              </div>
+              <div>
+                <strong>PESO (em kg)</strong>
+                <Input name="weight" />
+              </div>
+              <div>
+                <strong>ALTURA</strong>
+                <Input name="height" />
+              </div>
+            </OneLine>
+          </FormContainer>
+        )}
       </Form>
     </Container>
   );

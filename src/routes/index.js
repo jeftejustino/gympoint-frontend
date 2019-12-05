@@ -18,11 +18,15 @@ export default function Routes() {
       <Route path="/" exact component={SignIn} />
 
       <Route path="/alunos/adicionar" isPrivate component={StudentsForm} />
-      <Route path="/alunos/editar" isPrivate component={StudentsForm} />
+      <Route
+        path="/alunos/editar/:student_id"
+        isPrivate
+        component={StudentsForm}
+      />
       <Route path="/alunos" isPrivate component={StudentsList} />
 
       <Route path="/planos/adicionar" isPrivate component={PlansForm} />
-      <Route path="/planos/editar" isPrivate component={PlansForm} />
+      <Route path="/planos/editar/:plan_id" isPrivate component={PlansForm} />
       <Route path="/planos" isPrivate component={PlansList} />
 
       <Route
@@ -31,7 +35,7 @@ export default function Routes() {
         component={RegistrationsForm}
       />
       <Route
-        path="/matriculas/editar"
+        path="/matriculas/editar/:registration_id"
         isPrivate
         component={RegistrationsForm}
       />

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { MdAdd } from 'react-icons/md';
 import { toast } from 'react-toastify';
-import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import { TitleActions, Title, Actions } from '~/styles/titleActions';
 import { List } from '~/styles/list';
@@ -14,8 +14,6 @@ import api from '~/services/api';
 
 import { formatPrice } from '~/util/format';
 
-import { editPlan, createPlan } from '~/store/modules/plan/actions';
-
 export default function PlansList() {
   const [plans, setPlans] = useState([]);
   const [page, setPage] = useState(1);
@@ -23,48 +21,34 @@ export default function PlansList() {
   const [confirm, setConfirm] = useState(false);
   const [planConfirm, setPlanConfirm] = useState({});
 
-  const dispatch = useDispatch();
+  const getPlans = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await api.get('/plans', {
+        params: {
+          page,
+        },
+      });
 
-  useEffect(() => {
-    async function getPlans() {
-      try {
-        setLoading(true);
-        const response = await api.get('/plans', {
-          params: {
-            page,
-          },
-        });
+      const data = response.data.map(plan => ({
+        ...plan,
+        durationFormated: `${plan.duration} ${
+          plan.duration === 1 ? `mês` : `meses`
+        }`,
+        priceFormated: formatPrice(plan.price),
+      }));
 
-        const data = response.data.map(plan => ({
-          ...plan,
-          durationFormated: `${plan.duration} ${
-            plan.duration === 1 ? `mês` : `meses`
-          }`,
-          priceFormated: formatPrice(plan.price),
-        }));
-
-        setPlans(data);
-      } catch (error) {
-        toast.error('Falhar ao buscar alunos!\nTente novamente mais tarde!');
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    if (page === 0) {
-      setPage(1);
-    } else {
-      getPlans();
+      setPlans(data);
+    } catch (error) {
+      toast.error('Falhar ao buscar alunos!\nTente novamente mais tarde!');
+    } finally {
+      setLoading(false);
     }
   }, [page]);
 
-  async function handleEdit(planData) {
-    dispatch(editPlan(planData));
-  }
-
-  async function handleCreate() {
-    dispatch(createPlan());
-  }
+  useEffect(() => {
+    getPlans();
+  }, [getPlans, page]);
 
   async function handleConfirm(id) {
     setPlanConfirm(id);
@@ -79,8 +63,8 @@ export default function PlansList() {
   async function handleDelete(id) {
     try {
       await api.delete(`/plans/${id}`);
+      getPlans();
 
-      setPage(0);
       toast.success('Sucesso ao remover plano!');
     } catch (error) {
       toast.error('Falhar ao remover plano!\nTente novamente mais tarde!');
@@ -104,10 +88,10 @@ export default function PlansList() {
         <Title>Gerenciando planos</Title>
 
         <Actions>
-          <button type="button" onClick={handleCreate}>
+          <Link to="/planos/adicionar">
             <MdAdd size={20} color="#fff" />
             CADASTRAR
-          </button>
+          </Link>
         </Actions>
       </TitleActions>
       {loading ? (
@@ -137,13 +121,9 @@ export default function PlansList() {
                 <td align="center">{plan.durationFormated}</td>
                 <td align="center">{plan.priceFormated}</td>
                 <td>
-                  <button
-                    className="edit"
-                    type="button"
-                    onClick={() => handleEdit(plan)}
-                  >
+                  <Link className="edit" to={`/planos/editar/${plan.id}`}>
                     editar
-                  </button>
+                  </Link>
                 </td>
                 <td>
                   <button
