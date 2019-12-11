@@ -13,7 +13,7 @@ import { TitleActions, Title, Actions } from '~/styles/titleActions';
 import api from '~/services/api';
 import { formatPrice } from '~/util/format';
 
-export default function PlansForm() {
+export default function PlansForm({ history }) {
   const Schema = Yup.object().shape({
     title: Yup.string()
       .min(3, 'O title precisa ter pelo menos 3 caracteres')
@@ -31,6 +31,9 @@ export default function PlansForm() {
 
   const [loading, setLoading] = useState(false);
   const [plan, setPlan] = useState({});
+  const [duration, setDuration] = useState();
+  const [price, setPrice] = useState();
+  const [fullPrice, setFullPrice] = useState(0);
   const { plan_id } = useParams();
 
   useEffect(() => {
@@ -50,7 +53,8 @@ export default function PlansForm() {
           }`,
           priceFormated: formatPrice(p.price),
         }));
-
+        setPrice(data[0].price);
+        setDuration(data[0].duration);
         setPlan(data[0]);
       } catch (error) {
         toast.error('Falhar ao buscar alunos!\nTente novamente mais tarde!');
@@ -62,17 +66,24 @@ export default function PlansForm() {
     if (plan_id) getPlan();
   }, [plan_id]);
 
+  useEffect(() => {
+    let fprice = '';
+    if (price && duration) {
+      fprice = price * duration;
+    }
+    setFullPrice(fprice);
+  }, [price, duration]);
+
   async function handleSubmit(data) {
     try {
       if (plan.id) {
-        const response = await api.put(`plans/${plan.id}`, data);
+        await api.put(`plans/${plan.id}`, data);
         toast.success('Plano atualizado com sucesso!');
-        setPlan(response.data);
       } else {
-        const response = await api.post('plans', data);
+        await api.post('plans', data);
         toast.success('Plano salvo com sucesso!');
-        setPlan(response.data);
       }
+      history.push('/planos');
     } catch (error) {
       toast.error(
         'Houve um erro ao salvar! confira os dados e tente novamente!'
@@ -111,13 +122,28 @@ export default function PlansForm() {
             <OneLine>
               <div>
                 <strong>DURAÇÃO (em meses)</strong>
-                <Input name="duration" />
+                <Input
+                  name="duration"
+                  value={duration}
+                  onChange={e => {
+                    setDuration(e.target.value);
+                  }}
+                />
               </div>
               <div>
                 <strong>PREÇO MENSAL</strong>
-                <Input name="price" />
+                <Input
+                  name="price"
+                  value={price}
+                  onChange={e => {
+                    setPrice(e.target.value);
+                  }}
+                />
               </div>
-              <div />
+              <div>
+                <strong>PREÇO TOTAL</strong>
+                <Input name="precoTotal" value={fullPrice} disabled />
+              </div>
             </OneLine>
           </FormContainer>
         )}

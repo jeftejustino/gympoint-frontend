@@ -52,6 +52,7 @@ export default function PlansList() {
   }, [page]);
 
   useEffect(() => {
+    console.tron.log('Reload');
     getPlans();
   }, [getPlans, page]);
 
