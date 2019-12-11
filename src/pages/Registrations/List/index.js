@@ -33,7 +33,7 @@ export default function RegistrationsList() {
         },
       });
 
-      setTotalPages(parseInt(response.headers.count / 20));
+      setTotalPages(parseInt(response.headers.count / 20, 10));
 
       const data = response.data.map(registration => ({
         ...registration,
@@ -162,7 +162,11 @@ export default function RegistrationsList() {
               ))}
             </tbody>
           </List>
-          <Pagination setPage={setPage} currentPage={page} totalPages={20} />
+          <Pagination
+            setPage={setPage}
+            currentPage={page}
+            totalPages={totalPages}
+          />
         </>
       )}
     </Container>

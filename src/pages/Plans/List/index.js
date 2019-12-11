@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
 import React, { useState, useEffect, useCallback } from 'react';
 import { MdAdd } from 'react-icons/md';
 import { toast } from 'react-toastify';
@@ -7,6 +8,7 @@ import { TitleActions, Title, Actions } from '~/styles/titleActions';
 import { List } from '~/styles/list';
 import { Container, LoadingContainer } from './styles';
 
+import Pagination from '~/components/Pagination';
 import Loading from '~/components/Loading';
 import ModalConfirm from '~/components/ModalConfirm';
 
@@ -17,6 +19,7 @@ import { formatPrice } from '~/util/format';
 export default function PlansList() {
   const [plans, setPlans] = useState([]);
   const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [planConfirm, setPlanConfirm] = useState({});
@@ -29,6 +32,8 @@ export default function PlansList() {
           page,
         },
       });
+
+      setTotalPages(parseInt(response.headers.count / 20, 10));
 
       const data = response.data.map(plan => ({
         ...plan,
@@ -99,45 +104,52 @@ export default function PlansList() {
           <Loading />
         </LoadingContainer>
       ) : (
-        <List>
-          <thead>
-            <tr>
-              <th>TITULO</th>
-              <th width="300px" className="text-center">
-                DURAÇÃO
-              </th>
-              <th width="300px" className="text-center">
-                VALOR p/Mês
-              </th>
-              <th width="60px" />
-              <th width="40px" />
-            </tr>
-          </thead>
-
-          <tbody>
-            {plans.map(plan => (
-              <tr key={plan.id}>
-                <td>{plan.title}</td>
-                <td align="center">{plan.durationFormated}</td>
-                <td align="center">{plan.priceFormated}</td>
-                <td>
-                  <Link className="edit" to={`/planos/editar/${plan.id}`}>
-                    editar
-                  </Link>
-                </td>
-                <td>
-                  <button
-                    className="remove"
-                    type="button"
-                    onClick={() => handleConfirm(plan.id)}
-                  >
-                    apagar
-                  </button>
-                </td>
+        <>
+          <List>
+            <thead>
+              <tr>
+                <th>TITULO</th>
+                <th width="300px" className="text-center">
+                  DURAÇÃO
+                </th>
+                <th width="300px" className="text-center">
+                  VALOR p/Mês
+                </th>
+                <th width="60px" />
+                <th width="40px" />
               </tr>
-            ))}
-          </tbody>
-        </List>
+            </thead>
+
+            <tbody>
+              {plans.map(plan => (
+                <tr key={plan.id}>
+                  <td>{plan.title}</td>
+                  <td align="center">{plan.durationFormated}</td>
+                  <td align="center">{plan.priceFormated}</td>
+                  <td>
+                    <Link className="edit" to={`/planos/editar/${plan.id}`}>
+                      editar
+                    </Link>
+                  </td>
+                  <td>
+                    <button
+                      className="remove"
+                      type="button"
+                      onClick={() => handleConfirm(plan.id)}
+                    >
+                      apagar
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </List>
+          <Pagination
+            setPage={setPage}
+            currentPage={page}
+            totalPages={totalPages}
+          />
+        </>
       )}
     </Container>
   );

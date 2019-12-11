@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
@@ -5,6 +6,7 @@ import { TitleActions, Title } from '~/styles/titleActions';
 import { List } from '~/styles/list';
 import { Container, LoadingContainer, ContentModal } from './styles';
 
+import Pagination from '~/components/Pagination';
 import Loading from '~/components/Loading';
 import ModalConfirm from '~/components/ModalConfirm';
 
@@ -17,6 +19,7 @@ export default function HelpOrders() {
   const [questionId, setQuestionId] = useState(null);
   const [answer, setAnswer] = useState('');
   const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -28,6 +31,8 @@ export default function HelpOrders() {
             page,
           },
         });
+
+        setTotalPages(parseInt(response.headers.count / 20, 10));
 
         setQuestions(response.data);
       } catch (error) {
@@ -105,31 +110,38 @@ export default function HelpOrders() {
           <Loading />
         </LoadingContainer>
       ) : (
-        <List>
-          <thead>
-            <tr>
-              <th>ALUNO</th>
-              <th width="40px" />
-            </tr>
-          </thead>
-
-          <tbody>
-            {questions.map(question => (
-              <tr key={question.id}>
-                <td>{question.student.name}</td>
-                <td>
-                  <button
-                    className="edit"
-                    type="button"
-                    onClick={() => handleAnswer(question)}
-                  >
-                    responder
-                  </button>
-                </td>
+        <>
+          <List>
+            <thead>
+              <tr>
+                <th>ALUNO</th>
+                <th width="40px" />
               </tr>
-            ))}
-          </tbody>
-        </List>
+            </thead>
+
+            <tbody>
+              {questions.map(question => (
+                <tr key={question.id}>
+                  <td>{question.student.name}</td>
+                  <td>
+                    <button
+                      className="edit"
+                      type="button"
+                      onClick={() => handleAnswer(question)}
+                    >
+                      responder
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </List>
+          <Pagination
+            setPage={setPage}
+            currentPage={page}
+            totalPages={totalPages}
+          />
+        </>
       )}
     </Container>
   );

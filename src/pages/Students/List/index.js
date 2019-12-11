@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { MdAdd, MdSearch } from 'react-icons/md';
@@ -7,6 +8,7 @@ import { TitleActions, Title, Actions, Search } from '~/styles/titleActions';
 import { List } from '~/styles/list';
 import { Container, LoadingContainer } from './styles';
 
+import Pagination from '~/components/Pagination';
 import Loading from '~/components/Loading';
 
 import ModalConfirm from '~/components/ModalConfirm';
@@ -17,6 +19,7 @@ export default function StudentsList() {
   const [students, setStudents] = useState([]);
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [studentConfirm, setStudentConfirm] = useState({});
@@ -30,6 +33,8 @@ export default function StudentsList() {
           page,
         },
       });
+
+      setTotalPages(parseInt(response.headers.count / 20, 10));
 
       setStudents(response.data);
     } catch (error) {
@@ -103,43 +108,50 @@ export default function StudentsList() {
           <Loading />
         </LoadingContainer>
       ) : (
-        <List>
-          <thead>
-            <tr>
-              <th>NOME</th>
-              <th width="300px">E-MAIL</th>
-              <th width="300px" className="text-center">
-                IDADE
-              </th>
-              <th width="60px" />
-              <th width="40px" />
-            </tr>
-          </thead>
-
-          <tbody>
-            {students.map(student => (
-              <tr key={student.id}>
-                <td>{student.name}</td>
-                <td>{student.email}</td>
-                <td align="center">{student.age}</td>
-                <td>
-                  <Link to={`/alunos/editar/${student.id}`} className="edit">
-                    editar
-                  </Link>
-                </td>
-                <td>
-                  <button
-                    className="remove"
-                    type="button"
-                    onClick={() => handleConfirm(student.id)}
-                  >
-                    apagar
-                  </button>
-                </td>
+        <>
+          <List>
+            <thead>
+              <tr>
+                <th>NOME</th>
+                <th width="300px">E-MAIL</th>
+                <th width="300px" className="text-center">
+                  IDADE
+                </th>
+                <th width="60px" />
+                <th width="40px" />
               </tr>
-            ))}
-          </tbody>
-        </List>
+            </thead>
+
+            <tbody>
+              {students.map(student => (
+                <tr key={student.id}>
+                  <td>{student.name}</td>
+                  <td>{student.email}</td>
+                  <td align="center">{student.age}</td>
+                  <td>
+                    <Link to={`/alunos/editar/${student.id}`} className="edit">
+                      editar
+                    </Link>
+                  </td>
+                  <td>
+                    <button
+                      className="remove"
+                      type="button"
+                      onClick={() => handleConfirm(student.id)}
+                    >
+                      apagar
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </List>
+          <Pagination
+            setPage={setPage}
+            currentPage={page}
+            totalPages={totalPages}
+          />
+        </>
       )}
     </Container>
   );
