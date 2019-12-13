@@ -11,7 +11,7 @@ import { FormContainer, OneLine } from '~/styles/form';
 import { TitleActions, Title, Actions } from '~/styles/titleActions';
 import api from '~/services/api';
 
-export default function ComponentForm({ history }) {
+export default function ComponentForm() {
   const Schema = Yup.object().shape({
     name: Yup.string()
       .min(3, 'Nome precisa ter pelo menos 3 caracteres')
@@ -65,14 +65,14 @@ export default function ComponentForm({ history }) {
   async function handleSubmit(data) {
     try {
       if (student) {
-        await api.put(`student/${student.id}`, data);
+        const response = await api.put(`student/${student.id}`, data);
         toast.success('Estudante atualizado com sucesso!');
+        setStudent(response.data);
       } else {
-        await api.post('student', data);
+        const response = await api.post('student', data);
         toast.success('Estudante salvo com sucesso!');
+        setStudent(response.data);
       }
-
-      history.push('/alunos');
     } catch (error) {
       toast.error(
         'Houve um erro ao salvar! confira os dados e tente novamente!'
