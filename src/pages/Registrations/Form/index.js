@@ -55,7 +55,7 @@ export default function RegistrationForm() {
 
         setPlans(data);
       } catch (error) {
-        toast.error('Falhar ao buscar alunos!\nTente novamente mais tarde!');
+        toast.error('Falha ao buscar alunos!\nTente novamente mais tarde!');
       }
     }
     getPlans();
@@ -92,9 +92,7 @@ export default function RegistrationForm() {
         setStartDate(data.start_date);
         setPlanChoised(data.plan_id);
       } catch (error) {
-        toast.error(
-          'Falhar ao buscar matrículas!\nTente novamente mais tarde!'
-        );
+        toast.error('Falha ao buscar matrículas!\nTente novamente mais tarde!');
       } finally {
         setLoading(false);
       }

@@ -53,7 +53,7 @@ export default function ComponentForm() {
 
         setStudent(response.data[0]);
       } catch (error) {
-        toast.error('Falhar ao buscar alunos!\nTente novamente mais tarde!');
+        toast.error('Falha ao buscar alunos!\nTente novamente mais tarde!');
       } finally {
         setLoading(false);
       }

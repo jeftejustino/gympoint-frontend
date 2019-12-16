@@ -37,7 +37,7 @@ export default function HelpOrders() {
         setQuestions(response.data);
       } catch (error) {
         toast.error(
-          'Falhar ao buscar pedidos de auxílio!\nTente novamente mais tarde!'
+          'Falha ao buscar pedidos de auxílio!\nTente novamente mais tarde!'
         );
       } finally {
         setLoading(false);

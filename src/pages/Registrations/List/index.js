@@ -56,7 +56,7 @@ export default function RegistrationsList() {
       console.tron.log(data);
       setRegistrations(data);
     } catch (error) {
-      toast.error('Falhar ao buscar matrículas!\nTente novamente mais tarde!');
+      toast.error('Falha ao buscar matrículas!\nTente novamente mais tarde!');
     } finally {
       setLoading(false);
     }
@@ -83,7 +83,7 @@ export default function RegistrationsList() {
       getRegistrations();
       toast.success('Sucesso ao remover matrícula!');
     } catch (error) {
-      toast.error('Falhar ao remover matrícula!\nTente novamente mais tarde!');
+      toast.error('Falha ao remover matrícula!\nTente novamente mais tarde!');
     } finally {
       setRegistrationConfirm(null);
       setConfirm(false);

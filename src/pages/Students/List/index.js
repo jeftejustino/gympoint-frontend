@@ -38,7 +38,7 @@ export default function StudentsList() {
 
       setStudents(response.data);
     } catch (error) {
-      toast.error('Falhar ao buscar alunos!\nTente novamente mais tarde!');
+      toast.error('Falha ao buscar alunos!\nTente novamente mais tarde!');
     } finally {
       setLoading(false);
     }

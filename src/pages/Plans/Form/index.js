@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 import { toast } from 'react-toastify';
 
 import Loading from '~/components/Loading';
+import InputMask from '~/components/InputMask';
 
 import { Container, LoadingContainer } from './styles';
 import { FormContainer, OneLine } from '~/styles/form';
@@ -57,7 +58,7 @@ export default function PlansForm({ history }) {
         setDuration(data[0].duration);
         setPlan(data[0]);
       } catch (error) {
-        toast.error('Falhar ao buscar alunos!\nTente novamente mais tarde!');
+        toast.error('Falha ao buscar alunos!\nTente novamente mais tarde!');
       } finally {
         setLoading(false);
       }

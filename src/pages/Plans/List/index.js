@@ -45,7 +45,7 @@ export default function PlansList() {
 
       setPlans(data);
     } catch (error) {
-      toast.error('Falhar ao buscar alunos!\nTente novamente mais tarde!');
+      toast.error('Falha ao buscar alunos!\nTente novamente mais tarde!');
     } finally {
       setLoading(false);
     }
@@ -73,7 +73,7 @@ export default function PlansList() {
 
       toast.success('Sucesso ao remover plano!');
     } catch (error) {
-      toast.error('Falhar ao remover plano!\nTente novamente mais tarde!');
+      toast.error('Falha ao remover plano!\nTente novamente mais tarde!');
     } finally {
       setPlanConfirm(null);
       setConfirm(false);

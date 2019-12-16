@@ -1,13 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import ReactDatePicker from 'react-datepicker';
-import pt from 'date-fns/locale/pt-BR';
+import InputMask from 'react-input-mask';
 
 import { useField } from '@rocketseat/unform';
 
-import 'react-datepicker/dist/react-datepicker.css';
-
-export default function DatePicker({ name, onChangeDate, ...rest }) {
+export default function DatePicker({ name, mask, maskPlaceholder, ...rest }) {
   const ref = useRef(null);
   const { fieldName, registerField, defaultValue, error } = useField(name);
   const [selected, setSelected] = useState(defaultValue);
@@ -16,7 +13,7 @@ export default function DatePicker({ name, onChangeDate, ...rest }) {
     registerField({
       name: fieldName,
       ref: ref.current,
-      path: 'props.selected',
+      path: 'props.input',
       clearValue: pickerRef => {
         pickerRef.clear();
       },
@@ -25,15 +22,10 @@ export default function DatePicker({ name, onChangeDate, ...rest }) {
 
   return (
     <>
-      <ReactDatePicker
+      <InputMask
+        mask={mask}
+        maskPlaceholder={maskPlaceholder}
         name={fieldName}
-        selected={selected}
-        dateFormat="dd/MM/yyyy"
-        locale={pt}
-        onChange={date => {
-          setSelected(date);
-          onChangeDate(date);
-        }}
         ref={ref}
         {...rest}
       />
@@ -44,9 +36,10 @@ export default function DatePicker({ name, onChangeDate, ...rest }) {
 
 DatePicker.propTypes = {
   name: PropTypes.string.isRequired,
-  onChangeDate: PropTypes.func,
+  mask: PropTypes.oneOf(PropTypes.array, PropTypes.string).isRequired,
+  maskPlaceholder: PropTypes.string,
 };
 
 DatePicker.defaultProps = {
-  onChangeDate: () => {},
+  maskPlaceholder: '',
 };
