@@ -64,8 +64,8 @@ export default function ComponentForm() {
 
   async function handleSubmit(data) {
     try {
-      if (student) {
-        const response = await api.put(`student/${student.id}`, data);
+      if (student_id) {
+        const response = await api.put(`student/${student_id}`, data);
         toast.success('Estudante atualizado com sucesso!');
         setStudent(response.data);
       } else {

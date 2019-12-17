@@ -6,7 +6,7 @@ import * as Yup from 'yup';
 import { toast } from 'react-toastify';
 
 import Loading from '~/components/Loading';
-import InputMask from '~/components/InputMask';
+import InputMaskNumber from '~/components/InputMaskNumber';
 
 import { Container, LoadingContainer } from './styles';
 import { FormContainer, OneLine } from '~/styles/form';
@@ -47,16 +47,10 @@ export default function PlansForm({ history }) {
           },
         });
 
-        const data = response.data.map(p => ({
-          ...p,
-          durationFormated: `${p.duration} ${
-            p.duration === 1 ? `mês` : `meses`
-          }`,
-          priceFormated: formatPrice(p.price),
-        }));
-        setPrice(data[0].price);
-        setDuration(data[0].duration);
-        setPlan(data[0]);
+        const data = response.data[0];
+        setPrice(data.price);
+        setDuration(data.duration);
+        setPlan(data);
       } catch (error) {
         toast.error('Falha ao buscar alunos!\nTente novamente mais tarde!');
       } finally {
@@ -68,15 +62,16 @@ export default function PlansForm({ history }) {
   }, [plan_id]);
 
   useEffect(() => {
-    let fprice = '';
+    let formatedPrice = 0;
     if (price && duration) {
-      fprice = price * duration;
+      formatedPrice = price * duration;
     }
-    setFullPrice(fprice);
+    setFullPrice(formatPrice(formatedPrice));
   }, [price, duration]);
 
   async function handleSubmit(data) {
     try {
+      setLoading(true);
       if (plan.id) {
         await api.put(`plans/${plan.id}`, data);
         toast.success('Plano atualizado com sucesso!');
@@ -89,12 +84,14 @@ export default function PlansForm({ history }) {
       toast.error(
         'Houve um erro ao salvar! confira os dados e tente novamente!'
       );
+    } finally {
+      setLoading(false);
     }
   }
 
   return (
     <Container>
-      <Form schema={Schema} onSubmit={handleSubmit} initialData={plan}>
+      <Form scshema={Schema} onSubmit={handleSubmit} initialData={plan}>
         <TitleActions>
           <Title>{plan ? 'Edição de plano' : 'Cadastro de plano'}</Title>
 
@@ -123,22 +120,21 @@ export default function PlansForm({ history }) {
             <OneLine>
               <div>
                 <strong>DURAÇÃO (em meses)</strong>
-                <Input
+                <InputMaskNumber
                   name="duration"
-                  value={duration}
-                  onChange={e => {
-                    setDuration(e.target.value);
-                  }}
+                  onChange={setDuration}
+                  thousandSeparator={false}
+                  decimalScale={0}
                 />
               </div>
               <div>
                 <strong>PREÇO MENSAL</strong>
-                <Input
+                <InputMaskNumber
+                  onChange={setPrice}
                   name="price"
-                  value={price}
-                  onChange={e => {
-                    setPrice(e.target.value);
-                  }}
+                  prefix="R$ "
+                  fixedDecimalScale
+                  decimalScale={2}
                 />
               </div>
               <div>
