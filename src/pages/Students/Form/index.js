@@ -6,12 +6,13 @@ import * as Yup from 'yup';
 import { toast } from 'react-toastify';
 
 import Loading from '~/components/Loading';
+import InputMaskNumber from '~/components/InputMaskNumber';
 import { Container, LoadingContainer } from './styles';
 import { FormContainer, OneLine } from '~/styles/form';
 import { TitleActions, Title, Actions } from '~/styles/titleActions';
 import api from '~/services/api';
 
-export default function ComponentForm() {
+export default function ComponentForm({ history }) {
   const Schema = Yup.object().shape({
     name: Yup.string()
       .min(3, 'Nome precisa ter pelo menos 3 caracteres')
@@ -60,19 +61,19 @@ export default function ComponentForm() {
     }
 
     if (student_id) getStudent();
-  }, [student_id]);
+  }, [history, student_id]);
 
   async function handleSubmit(data) {
     try {
       if (student_id) {
-        const response = await api.put(`student/${student_id}`, data);
+        await api.put(`student/${student_id}`, data);
         toast.success('Estudante atualizado com sucesso!');
-        setStudent(response.data);
       } else {
-        const response = await api.post('student', data);
+        await api.post('student', data);
         toast.success('Estudante salvo com sucesso!');
-        setStudent(response.data);
       }
+
+      history.push('/alunos');
     } catch (error) {
       toast.error(
         'Houve um erro ao salvar! confira os dados e tente novamente!'
@@ -116,15 +117,19 @@ export default function ComponentForm() {
             <OneLine>
               <div>
                 <strong>IDADE</strong>
-                <Input name="age" />
+                <InputMaskNumber
+                  name="age"
+                  thousandSeparator={false}
+                  decimalScale={0}
+                />
               </div>
               <div>
                 <strong>PESO (em kg)</strong>
-                <Input name="weight" />
+                <InputMaskNumber name="weight" />
               </div>
               <div>
                 <strong>ALTURA</strong>
-                <Input name="height" />
+                <InputMaskNumber name="height" />
               </div>
             </OneLine>
           </FormContainer>

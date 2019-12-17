@@ -7,6 +7,7 @@ import { useField } from '@rocketseat/unform';
 export default function InputMaskNumber({
   name,
   onChange,
+  decimalScale,
   decimalSeparator,
   thousandSeparator,
   ...rest
@@ -40,6 +41,7 @@ export default function InputMaskNumber({
           setValue(v.value);
           if (onChange) onChange(v.value);
         }}
+        decimalScale={decimalScale}
         decimalSeparator={decimalSeparator}
         thousandSeparator={thousandSeparator}
         allowedDecimalSeparators={['.', ',']}
@@ -55,10 +57,12 @@ InputMaskNumber.propTypes = {
   decimalSeparator: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   thousandSeparator: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   onChange: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
+  decimalScale: PropTypes.number,
 };
 
 InputMaskNumber.defaultProps = {
   decimalSeparator: ',',
   thousandSeparator: '.',
   onChange: null,
+  decimalScale: 2,
 };

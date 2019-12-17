@@ -134,7 +134,6 @@ export default function PlansForm({ history }) {
                   name="price"
                   prefix="R$ "
                   fixedDecimalScale
-                  decimalScale={2}
                 />
               </div>
               <div>
