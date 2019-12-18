@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { format, parseISO } from 'date-fns';
 import pt from 'date-fns/locale/pt-BR';
 import { TitleActions, Title, Actions } from '~/styles/titleActions';
-import { List } from '~/styles/list';
+import { List, NoItems } from '~/styles/list';
 import { Container, LoadingContainer, CheckCircle } from './styles';
 
 import Pagination from '~/components/Pagination';
@@ -116,52 +116,56 @@ export default function RegistrationsList() {
         </LoadingContainer>
       ) : (
         <>
-          <List>
-            <thead>
-              <tr>
-                <th>ALUNO</th>
-                <th className="text-center">PLANO</th>
-                <th className="text-center">INÍCIO</th>
-                <th className="text-center">TÉRMINO</th>
-                <th className="text-center">ATIVA</th>
-                <th width="60px" />
-                <th width="40px" />
-              </tr>
-            </thead>
-
-            <tbody>
-              {registrations.map(registration => (
-                <tr key={registration.id}>
-                  <td>{registration.student.name}</td>
-                  <td align="center">{registration.plan.title}</td>
-                  <td align="center">{registration.start_dateFormatted}</td>
-                  <td align="center">{registration.end_dateFormatted}</td>
-                  <td align="center">
-                    <CheckCircle active={registration.active}>
-                      <MdDone size={18} color="#fff" />
-                    </CheckCircle>
-                  </td>
-                  <td>
-                    <Link
-                      to={`matriculas/editar/${registration.id}`}
-                      className="edit"
-                    >
-                      editar
-                    </Link>
-                  </td>
-                  <td>
-                    <button
-                      className="remove"
-                      type="button"
-                      onClick={() => handleConfirm(registration.id)}
-                    >
-                      apagar
-                    </button>
-                  </td>
+          {registrations.length ? (
+            <List>
+              <thead>
+                <tr>
+                  <th>ALUNO</th>
+                  <th className="text-center">PLANO</th>
+                  <th className="text-center">INÍCIO</th>
+                  <th className="text-center">TÉRMINO</th>
+                  <th className="text-center">ATIVA</th>
+                  <th width="60px" />
+                  <th width="40px" />
                 </tr>
-              ))}
-            </tbody>
-          </List>
+              </thead>
+
+              <tbody>
+                {registrations.map(registration => (
+                  <tr key={registration.id}>
+                    <td>{registration.student.name}</td>
+                    <td align="center">{registration.plan.title}</td>
+                    <td align="center">{registration.start_dateFormatted}</td>
+                    <td align="center">{registration.end_dateFormatted}</td>
+                    <td align="center">
+                      <CheckCircle active={registration.active}>
+                        <MdDone size={18} color="#fff" />
+                      </CheckCircle>
+                    </td>
+                    <td>
+                      <Link
+                        to={`matriculas/editar/${registration.id}`}
+                        className="edit"
+                      >
+                        editar
+                      </Link>
+                    </td>
+                    <td>
+                      <button
+                        className="remove"
+                        type="button"
+                        onClick={() => handleConfirm(registration.id)}
+                      >
+                        apagar
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </List>
+          ) : (
+            <NoItems>Não há matrículas cadastrados.</NoItems>
+          )}
           <Pagination
             setPage={setPage}
             currentPage={page}

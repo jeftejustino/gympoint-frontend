@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 
 import { TitleActions, Title, Actions } from '~/styles/titleActions';
-import { List } from '~/styles/list';
+import { List, NoItems } from '~/styles/list';
 import { Container, LoadingContainer } from './styles';
 
 import Pagination from '~/components/Pagination';
@@ -106,45 +106,49 @@ export default function PlansList() {
         </LoadingContainer>
       ) : (
         <>
-          <List>
-            <thead>
-              <tr>
-                <th>TITULO</th>
-                <th width="300px" className="text-center">
-                  DURAÇÃO
-                </th>
-                <th width="300px" className="text-center">
-                  VALOR p/Mês
-                </th>
-                <th width="60px" />
-                <th width="40px" />
-              </tr>
-            </thead>
-
-            <tbody>
-              {plans.map(plan => (
-                <tr key={plan.id}>
-                  <td>{plan.title}</td>
-                  <td align="center">{plan.durationFormated}</td>
-                  <td align="center">{plan.priceFormated}</td>
-                  <td>
-                    <Link className="edit" to={`/planos/editar/${plan.id}`}>
-                      editar
-                    </Link>
-                  </td>
-                  <td>
-                    <button
-                      className="remove"
-                      type="button"
-                      onClick={() => handleConfirm(plan.id)}
-                    >
-                      apagar
-                    </button>
-                  </td>
+          {plans.length ? (
+            <List>
+              <thead>
+                <tr>
+                  <th>TITULO</th>
+                  <th width="300px" className="text-center">
+                    DURAÇÃO
+                  </th>
+                  <th width="300px" className="text-center">
+                    VALOR p/Mês
+                  </th>
+                  <th width="60px" />
+                  <th width="40px" />
                 </tr>
-              ))}
-            </tbody>
-          </List>
+              </thead>
+
+              <tbody>
+                {plans.map(plan => (
+                  <tr key={plan.id}>
+                    <td>{plan.title}</td>
+                    <td align="center">{plan.durationFormated}</td>
+                    <td align="center">{plan.priceFormated}</td>
+                    <td>
+                      <Link className="edit" to={`/planos/editar/${plan.id}`}>
+                        editar
+                      </Link>
+                    </td>
+                    <td>
+                      <button
+                        className="remove"
+                        type="button"
+                        onClick={() => handleConfirm(plan.id)}
+                      >
+                        apagar
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </List>
+          ) : (
+            <NoItems>Não há planos cadastrados.</NoItems>
+          )}
           <Pagination
             setPage={setPage}
             currentPage={page}

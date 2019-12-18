@@ -25,8 +25,8 @@ export default function PlansForm({ history }) {
       .moreThan(0, 'Informe a duração corretamente!')
       .required('Duração é obrigatória!'),
     price: Yup.number()
-      .typeError('Informe a duração corretamente!')
-      .moreThan(0, 'Informe a duração corretamente!')
+      .typeError('Informe o preço corretamente!')
+      .moreThan(0, 'Informe o preço corretamente!')
       .required('Duração é obrigatória!'),
   });
 

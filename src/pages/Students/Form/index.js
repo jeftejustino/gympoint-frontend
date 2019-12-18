@@ -125,11 +125,11 @@ export default function ComponentForm({ history }) {
               </div>
               <div>
                 <strong>PESO (em kg)</strong>
-                <InputMaskNumber name="weight" />
+                <InputMaskNumber name="weight" suffix="kg" />
               </div>
               <div>
                 <strong>ALTURA</strong>
-                <InputMaskNumber name="height" />
+                <InputMaskNumber name="height" suffix="m" />
               </div>
             </OneLine>
           </FormContainer>

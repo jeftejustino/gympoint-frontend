@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 import { TitleActions, Title } from '~/styles/titleActions';
-import { List } from '~/styles/list';
+import { List, NoItems } from '~/styles/list';
 import { Container, LoadingContainer, ContentModal } from './styles';
 
 import Pagination from '~/components/Pagination';
@@ -111,31 +111,35 @@ export default function HelpOrders() {
         </LoadingContainer>
       ) : (
         <>
-          <List>
-            <thead>
-              <tr>
-                <th>ALUNO</th>
-                <th width="40px" />
-              </tr>
-            </thead>
-
-            <tbody>
-              {questions.map(question => (
-                <tr key={question.id}>
-                  <td>{question.student.name}</td>
-                  <td>
-                    <button
-                      className="edit"
-                      type="button"
-                      onClick={() => handleAnswer(question)}
-                    >
-                      responder
-                    </button>
-                  </td>
+          {questions.length ? (
+            <List>
+              <thead>
+                <tr>
+                  <th>ALUNO</th>
+                  <th width="40px" />
                 </tr>
-              ))}
-            </tbody>
-          </List>
+              </thead>
+
+              <tbody>
+                {questions.map(question => (
+                  <tr key={question.id}>
+                    <td>{question.student.name}</td>
+                    <td>
+                      <button
+                        className="edit"
+                        type="button"
+                        onClick={() => handleAnswer(question)}
+                      >
+                        responder
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </List>
+          ) : (
+            <NoItems>Não há pedidos de auxilio cadastrados.</NoItems>
+          )}
           <Pagination
             setPage={setPage}
             currentPage={page}

@@ -16,7 +16,7 @@ import { formatPrice } from '~/util/format';
 import Select from '~/components/SelectInput';
 import DatePicker from '~/components/DatePicker';
 
-export default function RegistrationForm() {
+export default function RegistrationForm({ history }) {
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(false);
   const [endData, setEndData] = useState('');
@@ -119,17 +119,13 @@ export default function RegistrationForm() {
   async function handleSubmit(data) {
     try {
       if (registration.id) {
-        const response = await api.put(
-          `registrations/${registration.id}`,
-          data
-        );
-        setRegistration(response.data);
+        await api.put(`registrations/${registration.id}`, data);
         toast.success('Matrícula atualizada com sucesso!');
       } else {
-        const response = await api.post('registrations', data);
-        setRegistration(response.data);
+        await api.post('registrations', data);
         toast.success('Matrículas salva com sucesso!');
       }
+      history.push('/matriculas');
     } catch (error) {
       toast.error(
         'Houve um erro ao salvar! confira os dados e tente novamente!'

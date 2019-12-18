@@ -5,7 +5,7 @@ import { MdAdd, MdSearch } from 'react-icons/md';
 import { toast } from 'react-toastify';
 
 import { TitleActions, Title, Actions, Search } from '~/styles/titleActions';
-import { List } from '~/styles/list';
+import { List, NoItems } from '~/styles/list';
 import { Container, LoadingContainer } from './styles';
 
 import Pagination from '~/components/Pagination';
@@ -109,43 +109,50 @@ export default function StudentsList() {
         </LoadingContainer>
       ) : (
         <>
-          <List>
-            <thead>
-              <tr>
-                <th>NOME</th>
-                <th width="300px">E-MAIL</th>
-                <th width="300px" className="text-center">
-                  IDADE
-                </th>
-                <th width="60px" />
-                <th width="40px" />
-              </tr>
-            </thead>
-
-            <tbody>
-              {students.map(student => (
-                <tr key={student.id}>
-                  <td>{student.name}</td>
-                  <td>{student.email}</td>
-                  <td align="center">{student.age}</td>
-                  <td>
-                    <Link to={`/alunos/editar/${student.id}`} className="edit">
-                      editar
-                    </Link>
-                  </td>
-                  <td>
-                    <button
-                      className="remove"
-                      type="button"
-                      onClick={() => handleConfirm(student.id)}
-                    >
-                      apagar
-                    </button>
-                  </td>
+          {students.length ? (
+            <List>
+              <thead>
+                <tr>
+                  <th>NOME</th>
+                  <th width="300px">E-MAIL</th>
+                  <th width="300px" className="text-center">
+                    IDADE
+                  </th>
+                  <th width="60px" />
+                  <th width="40px" />
                 </tr>
-              ))}
-            </tbody>
-          </List>
+              </thead>
+
+              <tbody>
+                {students.map(student => (
+                  <tr key={student.id}>
+                    <td>{student.name}</td>
+                    <td>{student.email}</td>
+                    <td align="center">{student.age}</td>
+                    <td>
+                      <Link
+                        to={`/alunos/editar/${student.id}`}
+                        className="edit"
+                      >
+                        editar
+                      </Link>
+                    </td>
+                    <td>
+                      <button
+                        className="remove"
+                        type="button"
+                        onClick={() => handleConfirm(student.id)}
+                      >
+                        apagar
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </List>
+          ) : (
+            <NoItems>Não há alunos cadastrados.</NoItems>
+          )}
           <Pagination
             setPage={setPage}
             currentPage={page}

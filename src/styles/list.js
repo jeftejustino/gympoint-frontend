@@ -34,3 +34,9 @@ export const List = styled.table`
     }
   }
 `;
+
+export const NoItems = styled.div`
+  display: flex;
+  justify-content: left;
+  padding: 15px 0px;
+`;
