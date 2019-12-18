@@ -27,7 +27,7 @@ export default function PlansForm({ history }) {
     price: Yup.number()
       .typeError('Informe o preço corretamente!')
       .moreThan(0, 'Informe o preço corretamente!')
-      .required('Duração é obrigatória!'),
+      .required('Preço é obrigatório!'),
   });
 
   const [loading, setLoading] = useState(false);
