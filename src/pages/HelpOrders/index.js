@@ -32,7 +32,7 @@ export default function HelpOrders() {
           },
         });
 
-        setTotalPages(parseInt(response.headers.count / 20, 10));
+        setTotalPages(Math.round(response.headers.count / 20));
 
         setQuestions(response.data);
       } catch (error) {

@@ -33,8 +33,8 @@ export default function StudentsList() {
           page,
         },
       });
-
-      setTotalPages(parseInt(response.headers.count / 20, 10));
+      console.tron.log(response);
+      setTotalPages(Math.round(response.headers.count / 20));
 
       setStudents(response.data);
     } catch (error) {

@@ -33,7 +33,7 @@ export default function PlansList() {
         },
       });
 
-      setTotalPages(parseInt(response.headers.count / 20, 10));
+      setTotalPages(Math.round(response.headers.count / 20));
 
       const data = response.data.map(plan => ({
         ...plan,

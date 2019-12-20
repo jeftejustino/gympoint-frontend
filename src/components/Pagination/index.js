@@ -14,6 +14,8 @@ export default function Pagination({ setPage, currentPage, totalPages }) {
   const [isLast, setIsLast] = useState(false);
   const [pages, setPages] = useState([]);
 
+  console.tron.log(currentPage, totalPages);
+
   useEffect(() => {
     if (currentPage === 1) {
       setIsFirst(true);
@@ -66,7 +68,6 @@ export default function Pagination({ setPage, currentPage, totalPages }) {
     }
 
     setPages(newPages);
-    console.tron.log(currentPage, newPages, totalPages);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
